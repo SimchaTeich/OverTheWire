@@ -11,9 +11,9 @@ ssh
 [How to use SSH on wikiHow](https://www.wikihow.com/Use-SSH)
 
 ## Solution
-```sh
+```
 ssh bandit0@bandit.labs.overthewire.org -p 2220
 ```
-```sh
+```
 bandit0
 ```
