@@ -18,7 +18,7 @@ ssh bandit8@bandit.labs.overthewire.org -p 2220
 TESKZC0XvTetK0S9xNwm25STk5iWrBvP
 ```
 ```
-cat data.txt | sort -r | uniq -c | grep " 1 " 
+cat data.txt | sort -r | uniq -c | grep " 1 "
 ```
 
 ## Password for the next level
