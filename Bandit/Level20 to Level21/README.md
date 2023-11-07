@@ -37,7 +37,7 @@ cs.sendall(prev_password)
 print(cs.recv(1024))
 ```
 ```
-python3 /tmp/myCode.py
+python3 /tmp/myServer.py
 ```
 
 terminal-2:
