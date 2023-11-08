@@ -29,7 +29,7 @@ cat /usr/bin/cronjob_bandit24.sh
 ```
 vim /var/spool/bandit24/foo/myScript.sh
 ```
-Copy the next script into the file abouv.
+Copy & Paste the next script.
 ```sh
 #!/bin/bash
 cat /etc/bandit_pass/bandit24 > /tmp/bandit24_password
