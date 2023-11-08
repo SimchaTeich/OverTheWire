@@ -60,6 +60,26 @@ ssh bandit20@bandit.labs.overthewire.org -p 2220
 ```
 VxCazJaVykI6W36BkBU0mJTCM8rR95XT
 ```
+```
+tmux
+```
+* Type: `ctrl+b %` to split the window.
+
+In right window:
+```
+nc -l 13337
+```
+In left window:
+```
+./suconnect 13337
+```
+In rigth window:
+```
+VxCazJaVykI6W36BkBU0mJTCM8rR95XT
+```
+
+<img src="./20.0.png"></img>
+
 
 ## Password for the next level
 ```
