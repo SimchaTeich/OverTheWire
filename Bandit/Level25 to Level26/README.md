@@ -53,6 +53,25 @@ v
 :e /etc/bandit_pass/bandit26
 ```
 
+Although we have now obtained the password, but not yet for the shell (it is written in the challenge that this is also needed). Fortunately, there is a command that will open a shell for us in vim:
+
+```
+:shell
+```
+
+But we're back to vim. And this is true for every command we try to execute (with `:!<cmd>`). This means that vim runs the commands according to the shell written in $SHELL, and it is not **/bin/bash**.
+Therefore we will set vim's shell to be **/bin/bash**.
+
+```
+:set shell=/bin/bash
+```
+```
+:shell
+```
+
+And now we're in!
+Of course we will remember that we will type the command exit it will return to vim.
+
 ## Password for the next level
 ```
 c7GvcKlw9mC7aUQaPx7nwFstuAIBw1o1
