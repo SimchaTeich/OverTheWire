@@ -7,8 +7,11 @@ URL:      http://natas4.natas.labs.overthewire.org
 
 ## Solution
 <img src="./0.png"></img>
+
 <img src="./1.png"></img>
+
 <img src="./2.png"></img>
+
 <img src="./3.png"></img>
 
 ## Password for the next level:
