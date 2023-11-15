@@ -10,7 +10,7 @@ URL:      http://natas10.natas.labs.overthewire.org
 
 <img src="./1.png"></img>
 
-So, the forbidden characters are `;`, `|` and `&`. The solution of the previous step does not include these characters at all, so it is also valid here. So the input will be: `. /etc/natas_webpass/natas11 #`
+So, the forbidden characters are `;`, `|` and `&`. My solution of the previous step does not include these characters at all, so it is also valid here. So the input will be: `. /etc/natas_webpass/natas11 #`
 
 <img src="./2.png"></img>
 
