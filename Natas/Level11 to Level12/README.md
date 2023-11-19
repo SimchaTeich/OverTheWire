@@ -8,6 +8,33 @@ URL:      http://natas12.natas.labs.overthewire.org
 ## Solution
 <img src="./0.png"></img>
 
+If we look at the source code, we will find that there is a parameter called **filename**, whose extension is appended to a new file in the **random_string.ext** format. where **ext** is the extension that came from the client. This file will contain the contents of the file that came from the client.
+
+<img src="./1.png"></img>
+
+<img src="./2.png"></img>
+
+<img src="./3.png"></img>
+
+<img src="./4.png"></img>
+
+So, `$target_path` is the **random_string.ext**. That is, the client can control the file type that will create on the server. But, what will happen with this file later?
+
+For the purpose of an example, we will create a small jpg file on our local computer (there is a correctness check for the size...) and upload it:
+
+This is the picture for uploading: <img src="./little_JPEG.jpg"></img><br />
+And now we will upload it:
+
+<img src="./5.png"></img>
+
+<img src="./6.png"></img>
+
+**random_string.ext**:
+<img src="./7.png"></img>
+
+<img src="./8.png"></img>
+
+
 
 
 ## Password for the next level:
