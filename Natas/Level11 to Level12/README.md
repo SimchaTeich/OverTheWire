@@ -34,8 +34,25 @@ And now we will upload it:
 
 <img src="./8.png"></img>
 
+That is, after a file is created with the content that the user uploaded, a get http request is made to it. Thanks to this:
 
+<img src="./9.png"></img>
 
+If so, we can generate a php file and upload it. When a GET HTTP query is made, a code is run for it. Because that's how the web works... let's do this:
+
+Copy & Paste the next code:
+```php
+# get_password.php
+<?php
+echo shell_exec("cat /etc/natas_webpass/natas13");
+?>
+```
+
+<img src="./10.png"></img>
+
+<img src="./11.png"></img>
+
+<img src="./12.png"></img>
 
 ## Password for the next level:
 ```
