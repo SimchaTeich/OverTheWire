@@ -30,5 +30,5 @@ echo shell_exec("cat /etc/natas_webpass/natas14");
 
 ## Password for the next level:
 ```
-GIF87aqPazSJBmrmU7UQJv17MHk1PGC4DxZMEP
+qPazSJBmrmU7UQJv17MHk1PGC4DxZMEP
 ```
