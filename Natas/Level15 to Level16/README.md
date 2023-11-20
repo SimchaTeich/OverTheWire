@@ -2,7 +2,7 @@
 
 ## Details
 Username: `natas16`<br />
-Password: `trd7izrd5gatjj9pkpeuaolfejhqj32v`<br />
+Password: `TRD7iZrd5gATjj9PkPEuaOlfEjHqj32V`<br />
 URL:      http://natas16.natas.labs.overthewire.org
 
 ## Solution
