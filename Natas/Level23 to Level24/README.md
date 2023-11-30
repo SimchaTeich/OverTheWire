@@ -10,6 +10,8 @@ URL:      http://natas24.natas.labs.overthewire.org
 
 ![](1.png)
 
+So I read about the strcmp() function in PHP [here](https://www.php.net/manual/en/function.strcmp.php), and deduced the solution:
+
 ![](2.png)
 
 ![](3.png)
