@@ -18,11 +18,11 @@ That is, if the `revelio` parameter exists AND I'm not in the administrator's se
 
 Therefore, to see what is really happening, we will send a GET request with the `revelio` parameter and sniff the traffic:
 
+![](4.png)
+
 ![](5.png)
 
 ![](6.png)
-
-![](7.png)
 
 ## Password for the next level:
 ```
