@@ -10,5 +10,5 @@ URL:      http://natas26.natas.labs.overthewire.org
 
 ## Password for the next level:
 ```
-
+PSO8xysPi00WKIiZZ6s6PtRmFy9cbxj3
 ```
