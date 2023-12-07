@@ -136,8 +136,13 @@ Inputs:
 *   Username: `natas28                                                         _`<br />
     Password: `password`
 
-* Username: `natas28`<br />
+![](1.png)
+
+* Username: `natas28                                                         `<br />
   Password: `password`
+
+![](2.png)
+
 ## Password for the next level:
 ```
 skrwxciAe6Dnb0VfFDzDEHcCzQmv3Gd4
