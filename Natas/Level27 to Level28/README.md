@@ -16,6 +16,11 @@ Well, there is a case of HTTP redirect here. Let's see it in Wireshark:
 
 ![](3.png)
 
+I tried playing a bit with the **query** parameter...
+
+![](4.png)
+
+![](5.png)
 
 
 
