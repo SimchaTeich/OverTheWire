@@ -6,6 +6,17 @@ Password: `skrwxciAe6Dnb0VfFDzDEHcCzQmv3Gd4`<br />
 URL:      http://natas28.natas.labs.overthewire.org
 
 ## Solution
+![](0.png)
+
+![](1.png)
+
+![](2.png)
+
+Well, there is a case of HTTP redirect here. Let's see it in Wireshark:
+
+![](3.png)
+
+
 
 
 ## Password for the next level:
