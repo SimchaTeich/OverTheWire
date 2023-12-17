@@ -74,8 +74,44 @@ for c in printable:
     print(c + ":", ' '.join([decoded[i*2*16:(i+1)*2*16] for i in range(len(decoded)//(2*16))]))
 ```
 
+![](7.png)
 
+A number of things can be concluded from looking at the output.
+* Each row can be divided into 3 parts in this order:
+    * Fixed part<br />
+    `1be82511a7ba5bfd578c0eef466db59c dc84728fdcf89d93751d10a7c75c8cf2`
+    * Variable part (probably depends on input from the user)
+    * A part that in most cases looks the same except for the characters `"`, `#`, `&`, `'`, `\`, `\n`, `\r`
 
+* It seems that the input from the user has been padded to 16 bytes, and encrypted.
+
+I decided to try another approach, which is to see what happens when the input size changes. How does it affect?
+
+```python
+from requests import get
+from requests.auth import HTTPBasicAuth
+from urllib.parse import unquote
+from base64 import b64decode
+
+# Current level details
+natas28_username = "natas28"
+natas28_password = "skrwxciAe6Dnb0VfFDzDEHcCzQmv3Gd4"
+
+# GET HTTP details
+URL = "http://natas28.natas.labs.overthewire.org/?query={0}"
+AUTH = HTTPBasicAuth(natas28_username, natas28_password)
+
+for i in range(32):
+    res = get(url=URL.format('*'*i), auth=AUTH, allow_redirects=False)
+    new_location = res.headers['Location'].split('=')[-1]
+    decoded = bytes.hex(b64decode(unquote(new_location)))
+    print(str(i).zfill(2) + ":", ' '.join([decoded[i*2*16:(i+1)*2*16] for i in range(len(decoded)//(2*16))]))
+```
+
+![](8.png)
+
+The following can now be concluded:
+* 
 ## Password for the next level:
 ```
 
