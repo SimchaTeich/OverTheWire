@@ -110,8 +110,25 @@ for i in range(32):
 
 ![](8.png)
 
-The following can now be concluded:
-* 
+And from this I deduced the following:
+* The third part of the line actually depends on the second part. (Here it is expressed because of the size of the input).
+* It is possible that what actually happens is a combination of the input from the user within an existing string (for example an sql query), padding and encryption.
+* We have no control over the first part.
+* The characters `&` and `#` are removed from the input
+* The characters `\`, `\r`, `\n`, `"`, `'` increase the input by one character.
+
+Therefore, the order of operations on the server is as follows:
+1. The input comes from the user
+2. The characters `&` and `#` are removed from it
+3. The input goes through the `mysqli_real_escape_string` function
+4. The input is integrated into a sql query and padded to a 16-byte division (probably with PKCS#7 padding)
+5. The query undergoes some kind of block encryption and is sent as a parameter to the redirect.<br />
+It also makes sense because of the parameter name, **"quary"**.
+
+Can we generate a `select * from users where username='natas28'` style query ourselves and send? No. Because we don't know the encryption and its key...
+
+So what can we do?
+
 ## Password for the next level:
 ```
 
