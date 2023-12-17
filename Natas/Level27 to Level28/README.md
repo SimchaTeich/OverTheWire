@@ -132,7 +132,7 @@ Can we generate a `select * from users where username='natas29'` style query our
 
 So what can we do? After all, we will not be able to do sql injection due to the protection.<br />
 is that so?<br />
-Why can't we separate blocks between the protection of the `mysqli_real_escape_string` function (adding a slash '\') and the special character?<br />
+Why can't we separate blocks between the protection of the `mysqli_real_escape_string` function (adding a slash `\`) and the special character?<br />
 Ummm..<br />
 Can we produce a hacked block and assemble a hacked query with it? Let's check it out!
 We know that in each query up to 3 answers are displayed. We will try to get more answers as a start.
