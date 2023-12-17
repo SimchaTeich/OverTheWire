@@ -122,12 +122,27 @@ Therefore, the order of operations on the server is as follows:
 2. The characters `&` and `#` are removed from it
 3. The input goes through the `mysqli_real_escape_string` function
 4. The input is integrated into a sql query and padded to a 16-byte division (probably with PKCS#7 padding)
-5. The query undergoes some kind of block encryption and is sent as a parameter to the redirect.<br />
+5. The query undergoes some kind of block encryption, base64 and is sent as a parameter to the redirect.<br />
 It also makes sense because of the parameter name, **"quary"**.
 
-Can we generate a `select * from users where username='natas28'` style query ourselves and send? No. Because we don't know the encryption and its key...
+Can we generate a `select * from users where username='natas29'` style query ourselves and send? No. Because we don't know the encryption and its key...
 
-So what can we do?
+So what can we do? After all, we will not be able to do sql injection due to the protection.<br />
+is that so?<br />
+Why can't we separate blocks between the protection of the `mysqli_real_escape_string` function (adding a slash '\') and the special character?<br />
+Ummm..<br />
+Can we produce a hacked block and assemble a hacked query with it? Let's check it out!
+We know that in each query up to 3 answers are displayed. We will try to get more answers as a start.
+
+Note:
+From an trial & error about the size of the input, it turns out that the original sql quary looks like this:<br />
+`################ ################ ######<user input>########## ################ ####----------------`<br />
+* First 6 characters in the block of the input I concluded that if you enter 10 characters and see result, then 11 characters and see result, you immediately see that **the block is the same** the second time. And if the size is 16, then before the input there were 6. <br />
+* If the input to the quary is of size 0, then the fifth (and last) block has 4 bytes and then padding. This is true because when the input is size 12 there are still 5 blocks, and if the input is size 13 there are already 6 blocks.
+
+Therefore, you have to be careful about the 4 bytes that go into the user's block, and you also have to be aware of the fact that each added character moves all the ones that come in line.
+
+
 
 ## Password for the next level:
 ```
