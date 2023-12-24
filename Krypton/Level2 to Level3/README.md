@@ -41,7 +41,7 @@ ciphertext  keyfile.dat
 ssh krypton2@krypton.labs.overthewire.org -p 2231
 ```
 ```
-LEVELTWOPASSWORDROTTEN
+ROTTEN
 ```
 ```
 cd /krypton/krypton2 ; ls -al
