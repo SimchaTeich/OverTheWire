@@ -43,5 +43,5 @@ print("plaintext:", plaintext)
 
 ## Password for the next level:
 ```
-LEVELTWOPASSWORDROTTEN
+ROTTEN
 ```

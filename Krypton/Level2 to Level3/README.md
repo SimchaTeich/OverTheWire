@@ -43,6 +43,9 @@ ssh krypton2@krypton.labs.overthewire.org -p 2231
 ```
 LEVELTWOPASSWORDROTTEN
 ```
+```
+cd /krypton/krypton2 ; ls -al
+```
 
 ## Password for the next level:
 ```
