@@ -23,7 +23,7 @@ Additional Information:
 The **encrypt** binary will look for the keyfile in your current working directory. Therefore, it might be best to create a working direcory in /tmp and in there a link to the keyfile. As the **encrypt** binary runs setuid **krypton3**, you also need to give **krypton3** access to your working directory.
 
 Here is an example:
-```bash
+```console
 krypton2@melinda:~$ mktemp -d
 /tmp/tmp.Wf2OnCpCDQ
 krypton2@melinda:~$ cd /tmp/tmp.Wf2OnCpCDQ
