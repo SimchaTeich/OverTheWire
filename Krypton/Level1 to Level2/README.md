@@ -30,13 +30,13 @@ So what is `YRIRY GJB CNFFJBEQ EBGGRA`? Le's decrypt it using Python:
 
 ```python
 ENCRYPTED = 'YRIRY GJB CNFFJBEQ EBGGRA'.replace(' ', '')
+KEY = 13
 
-for i in range(26):
-    plaintext = ''
-    for letter in ENCRYPTED:
-        plaintext += chr((ord(letter) - ord('A') + i) % 26 + ord('A'))
-    
-    print(f"Encryption key = {26 - i}:", plaintext)
+plaintext = ''
+for letter in ENCRYPTED:
+    plaintext += chr((ord(letter) - ord('A') + 26 - KEY) % 26 + ord('A'))
+
+print("plaintext:", plaintext)
 ```
 
 ![](2.png)
