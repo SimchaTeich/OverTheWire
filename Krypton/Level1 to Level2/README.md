@@ -29,7 +29,7 @@ cat krypton2
 So what is `YRIRY GJB CNFFJBEQ EBGGRA`? Le's decrypt it using `tr` command:
 
 ```
-cat krypton2 | tr "A-Z" "N-ZA-M"
+cat krypton2 | tr 'N-ZA-M' 'A-Z'
 ```
 
 ![](2.png)
