@@ -8,9 +8,7 @@ Use this password to log in to krypton.labs.overthewire.org with username krypto
 
 ## Solution
 ```python
-from base64 import b64decode as d
-print(d('S1JZUFRPTklTR1JFQVQ='))
-# Output: b'KRYPTONISGREAT'
+echo S1JZUFRPTklTR1JFQVQ= | base64 -d
 ```
 
 ## Password for the next level:
