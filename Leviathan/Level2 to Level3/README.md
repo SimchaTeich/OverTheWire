@@ -28,7 +28,7 @@ touch '/tmp/wow.txt || bash'
 * `access()` **can** access the file `'/tmp/wow.txt || bash'`
     * because we created this file in **leviathan2** permissions.
 * but `system()` running this code: `cat /tmp/wow.txt || bash`
-    * **there is not** file named `/tmp/wow.txt`, so `bash` command is running in **leviathan3** permissions.
+    * **there is no** file named `/tmp/wow.txt`, so `bash` command is running in **leviathan3** permissions.
 
 
 ![](2.png)
