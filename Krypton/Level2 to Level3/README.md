@@ -46,8 +46,47 @@ ROTTEN
 ```
 cd /krypton/krypton2 ; ls -al
 ```
+```
+cd $(mktemp -d)
+```
+```
+ln -s /krypton/krypton2/keyfile.dat
+```
+```
+ls -al
+```
+
+![](0.png)
+
+```
+echo abcdefg > plaintext
+```
+```
+chmod g=wx
+```
+```
+/krypton/krypton2/encrypt plaintext
+```
+```
+ls -al
+```
+```
+cat ciphertext
+```
+
+![](1.png)
+
+```
+cat /krypton/krypton2/krypton3 | tr 'M-ZA-L' 'A-Z'
+```
+
+![](2.png)
+
+```
+cd ~ ; rm -r /tmp/tmp.8km5qE6OrE
+```
 
 ## Password for the next level:
 ```
-
+CAESARISEASY
 ```
