@@ -6,14 +6,42 @@ Enjoy!
 
 ## Solution
 ```
-```
 ssh krypton1@krypton.labs.overthewire.org -p 2231
 ```
 ```
 KRYPTONISGREAT
 ```
+```
+cd /krypton/krypton1 ; ls -al
+```
+```
+cat README
+```
+
+![](0.png)
+
+```
+cat krypton2
+```
+
+![](1.png)
+
+So what is `YRIRY GJB CNFFJBEQ EBGGRA`? Le's decrypt it using Python:
+
+```python
+ENCRYPTED = 'YRIRY GJB CNFFJBEQ EBGGRA'.replace(' ', '')
+
+for i in range(26):
+    plaintext = ''
+    for letter in ENCRYPTED:
+        plaintext += chr((ord(letter) - ord('A') + i) % 26 + ord('A'))
+    
+    print(f"Encryption key = {26 - i}:", plaintext)
+```
+
+![](2.png)
 
 ## Password for the next level:
 ```
-
+LEVELTWOPASSWORDROTTEN
 ```
