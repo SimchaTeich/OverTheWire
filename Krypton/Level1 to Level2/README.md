@@ -26,17 +26,10 @@ cat krypton2
 
 ![](1.png)
 
-So what is `YRIRY GJB CNFFJBEQ EBGGRA`? Le's decrypt it using Python:
+So what is `YRIRY GJB CNFFJBEQ EBGGRA`? Le's decrypt it using `tr` command:
 
-```python
-ENCRYPTED = 'YRIRY GJB CNFFJBEQ EBGGRA'.replace(' ', '')
-KEY = 13
-
-plaintext = ''
-for letter in ENCRYPTED:
-    plaintext += chr((ord(letter) - ord('A') + 26 - KEY) % 26 + ord('A'))
-
-print("plaintext:", plaintext)
+```
+cat krypton2 | tr "A-Z" "N-ZA-M"
 ```
 
 ![](2.png)
