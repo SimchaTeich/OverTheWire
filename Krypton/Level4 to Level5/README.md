@@ -128,7 +128,7 @@ if __name__ == '__main__':
     main()
 ```
 
-It is worth noting that the code was written after the solution was done through the interpreter only. To run it outside the challenger's computer all you have to do is change the found1 and found2 file paths and fill them with the same original content (copy paste).
+It is worth noting that the code was written after the solution was done through the Python interpreter only. To run it outside the challenger's computer all you have to do is change the found1 and found2 file paths and fill them with the same original content (copy paste).
 
 ![](2.png)
 
