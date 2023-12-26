@@ -1,7 +1,7 @@
 # Level 2 → Level 3
 
 ## Solution
-```bash
+```
 ssh narnia2@narnia.labs.overthewire.org -p 2226
 ```
 ```
