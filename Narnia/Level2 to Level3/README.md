@@ -54,7 +54,7 @@ int main(int argc, char * argv[]){
 In the first few seconds I didn't understand what could be done here. But then I remembered [microcorruption](https://github.com/SimchaTeich/Microcorruption)! And in my opinion, shellcode should be implanted here to the top of the stack and overwrite the value back which is 128+4 bytes from the top of the stack (plus 4 because there is an EBP register). Therefore, the order of operations will be as follows:
 * Inserting shellcode at the top of the stack
     * The same shellcode from the previous challenge that causes bash to run
-* Padding the shellcode so that it is 124 bytes in size
+* Padding the shellcode so that it is 128+4 bytes in size
 * And next to that will come the address to the top of the stack
      * This will overwrite the address back from main
      * Don't forget little endian
