@@ -67,8 +67,10 @@ Let's get started:
 
 2. padding is: 
     ```
-    perl -e 'print "A"x(128-33)'
+    perl -e 'print "A"x(128-33+4)'
     ```
+
+3. what is the address of the top of the stack?
 
 ## Password for the next level:
 ```
