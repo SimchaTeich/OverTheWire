@@ -71,9 +71,15 @@ Let's get started:
     ```
 
 3. what is the address of the top of the stack?
+    
+    #TODO: continue with gdb
     ```
     gdb --args ./narnia2 $(echo -e $(echo -e $SHELLCODE)$(echo -e $PADDING))
     ```
+
+
+
+
     ```
     SHELLCODE_ADDR=$'\xf8\xd3\xff\xff'
     ```
