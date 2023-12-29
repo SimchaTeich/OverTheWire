@@ -10,7 +10,6 @@ ssh narnia3@narnia.labs.overthewire.org -p 2226
 ```
 cd /narnia ; ls -al
 ```
-
 ```
 ./narnia3
 ```
