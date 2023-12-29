@@ -62,6 +62,13 @@ int main(int argc,char **argv){
 }
 ```
 
+In challenge `2->3`, after I finished I saw a solution to the challenge in a YouTube video (I attached the link to the video under the title **Appendix**). In the video there was a way to solve the challenge using environment variables. In the current challenge, it seems that the file deletes all environment variables.
+
+But since my solution did not include environment variables - so it also fits here (with necessary changes such as addresses)
+
+Let's get started:
+
+
 
 ## Password for the next level:
 ```
