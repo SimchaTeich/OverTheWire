@@ -10,7 +10,6 @@ aKNxxrpDc1
 ```
 cd /narnia ; ls -al
 ```
-
 ```
 ./narnia4
 ```
