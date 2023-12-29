@@ -62,9 +62,9 @@ int main(int argc,char **argv){
 }
 ```
 
-In challenge `Level2 -> Level3`, after I finished I saw a solution to the challenge in a YouTube video (I attached the link to the video under the title **Appendix**). In the video there was a way to solve the challenge using environment variables. In the current challenge, it seems that the file deletes all environment variables.
+In challenge `Level2 -> Level3`, after I finished I saw a solution to the challenge in a YouTube video (I attached the link to the video under the title **Appendix**). In the video there was a way to solve the challenge using something like an insider environment variables(?..). In the current challenge, it seems that the file deletes all [environment variables](https://stackoverflow.com/questions/10649273/where-is-the-definition-of-extern-char-environ).
 
-But since my solution did not include environment variables (Except for convenient purposes that I will now be forced to give up now...) - so it also fits here (with necessary changes such as addresses)
+But since my solution did not include internal environment variables or anything like that (but just for convenience... and I checked, they are not affected by the software) then I can bring the same solution with the necessary adjustments in terms of addresses and input size.
 
 Let's get started.
 
