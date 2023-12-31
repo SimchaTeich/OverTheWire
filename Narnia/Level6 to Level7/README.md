@@ -135,6 +135,8 @@ whoami
 cat /etc/narnia_pass/narnia7
 ```
 
+![](5.png)
+
 ## Password for the next level:
 ```
 YY4F9UaB60
